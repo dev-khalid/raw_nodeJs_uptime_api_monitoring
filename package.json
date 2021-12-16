@@ -1,0 +1,12 @@
+{
+  "name": "uptime_api_monitoring_using_raw_node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "khalid hossain akash",
+  "license": "ISC"
+}
