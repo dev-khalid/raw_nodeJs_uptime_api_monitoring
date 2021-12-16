@@ -1,0 +1,9 @@
+core modules: 
+1.url
+2.http
+3.string decoder 
+
+*Route Management
+*Route handling 
+*Sending RequestProperties 
+*Getting back request via callback function 
