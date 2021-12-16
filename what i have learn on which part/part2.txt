@@ -1,0 +1,6 @@
+core modules 
+1.fs 
+2.path 
+
+*environment variables 
+*crud operation using fs module 
