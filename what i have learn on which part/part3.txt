@@ -1,0 +1,4 @@
+core modules 
+1.crypto 
+
+callback function -> where a callback is used it's work is to set the value of defined parameter.and then with that parameter we can work 

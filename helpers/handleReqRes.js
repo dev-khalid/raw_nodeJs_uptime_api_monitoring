@@ -1,15 +1,16 @@
 const url = require('url');
 const { StringDecoder } = require('string_decoder');
 const routes = require('../routes');
-const {
-  notFoundHandler,
-} = require('../handlers/routeHandlers/notFoundHandler');
+const { notFoundHandler } = require('../handlers/routeHandlers/notFoundHandler');
+const { parseJSON } = require('./utilities');
+
+
 
 const handler = {};
 
 handler.handleReqRes = (req, res) => {
   //request handling
-  const parsedUrl = url.parse(req.url);
+  const parsedUrl = url.parse(req.url,true);
   const path = parsedUrl.pathname;
   const trimmedPath = path.replace(/^\/+|\/+$/g, '');
   const method = req.method.toLowerCase();
@@ -27,13 +28,6 @@ handler.handleReqRes = (req, res) => {
   const chosenHandler = routes[trimmedPath]
     ? routes[trimmedPath]
     : notFoundHandler;
-  chosenHandler(requestProperties, (statusCode, payload) => {
-    statusCode = typeof statusCode === 'number' ? statusCode : 500;
-    payload = typeof payload === 'object' ? payload : {};
-    const payloadString = JSON.stringify(payload);
-    res.writeHead(statusCode);
-    res.end(payloadString); //the handler function will decide what to send
-  });
 
   //request body parser
   const decoder = new StringDecoder('utf-8');
@@ -46,10 +40,17 @@ handler.handleReqRes = (req, res) => {
 
   req.on('end', () => {
     realData += decoder.end();
-    res.end("Good to Go")
-  });
+    requestProperties.body = parseJSON(realData);
+    chosenHandler(requestProperties, (statusCode, payload) => {
+      statusCode = typeof statusCode === 'number' ? statusCode : 500;
+      payload = typeof payload === 'object' ? payload : {};
+      const payloadString = JSON.stringify(payload);
 
-  
+      res.setHeader('Content-type', 'application/json');
+      res.writeHead(statusCode);
+      res.end(payloadString); //the handler function will decide what to send
+    });
+  });
 };
 
 module.exports = handler;
